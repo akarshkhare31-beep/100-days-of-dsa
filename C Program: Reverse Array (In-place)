@@ -1,0 +1,35 @@
+#include <stdio.h>
+
+int main() {
+    int arr[100], n, i;
+    int left, right, temp;
+
+    // Input size
+    scanf("%d", &n);
+
+    // Input array
+    for(i = 0; i < n; i++) {
+        scanf("%d", &arr[i]);
+    }
+
+    // Two-pointer approach
+    left = 0;
+    right = n - 1;
+
+    while(left < right) {
+        // Swap elements
+        temp = arr[left];
+        arr[left] = arr[right];
+        arr[right] = temp;
+
+        left++;
+        right--;
+    }
+
+    // Output reversed array
+    for(i = 0; i < n; i++) {
+        printf("%d ", arr[i]);
+    }
+
+    return 0;
+}

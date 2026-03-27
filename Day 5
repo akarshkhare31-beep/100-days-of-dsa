@@ -1,0 +1,47 @@
+#include <stdio.h>
+
+int main() {
+    int a[100], b[100], c[200];
+    int p, q, i, j, k;
+
+    // Input first array
+    scanf("%d", &p);
+    for(i = 0; i < p; i++) {
+        scanf("%d", &a[i]);
+    }
+
+    // Input second array
+    scanf("%d", &q);
+    for(i = 0; i < q; i++) {
+        scanf("%d", &b[i]);
+    }
+
+    // Merge process
+    i = 0;  // pointer for a[]
+    j = 0;  // pointer for b[]
+    k = 0;  // pointer for c[]
+
+    while(i < p && j < q) {
+        if(a[i] <= b[j]) {
+            c[k++] = a[i++];
+        } else {
+            c[k++] = b[j++];
+        }
+    }
+
+    // Copy remaining elements
+    while(i < p) {
+        c[k++] = a[i++];
+    }
+
+    while(j < q) {
+        c[k++] = b[j++];
+    }
+
+    // Output merged array
+    for(i = 0; i < k; i++) {
+        printf("%d ", c[i]);
+    }
+
+    return 0;
+}

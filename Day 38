@@ -1,0 +1,187 @@
+#include <stdio.h>
+#include <string.h>
+
+#define MAX 100
+
+int dq[MAX];
+int front = -1, rear = -1;
+
+// check empty
+int empty() {
+    return (front == -1);
+}
+
+// size
+int size() {
+    if (empty()) return 0;
+    return rear - front + 1;
+}
+
+// push_front
+void push_front(int x) {
+    if (front == 0) {
+        printf("Overflow\n");
+        return;
+    }
+
+    if (empty())
+        front = rear = 0;
+    else
+        front--;
+
+    dq[front] = x;
+}
+
+// push_back
+void push_back(int x) {
+    if (rear == MAX - 1) {
+        printf("Overflow\n");
+        return;
+    }
+
+    if (empty())
+        front = rear = 0;
+    else
+        rear++;
+
+    dq[rear] = x;
+}
+
+// pop_front
+void pop_front() {
+    if (empty()) {
+        printf("-1\n");
+        return;
+    }
+
+    printf("%d\n", dq[front]);
+
+    if (front == rear)
+        front = rear = -1;
+    else
+        front++;
+}
+
+// pop_back
+void pop_back() {
+    if (empty()) {
+        printf("-1\n");
+        return;
+    }
+
+    printf("%d\n", dq[rear]);
+
+    if (front == rear)
+        front = rear = -1;
+    else
+        rear--;
+}
+
+// front
+void get_front() {
+    if (empty()) printf("-1\n");
+    else printf("%d\n", dq[front]);
+}
+
+// back
+void get_back() {
+    if (empty()) printf("-1\n");
+    else printf("%d\n", dq[rear]);
+}
+
+// clear
+void clear() {
+    front = rear = -1;
+}
+
+// reverse
+void reverse() {
+    if (empty()) return;
+
+    int i = front, j = rear;
+    while (i < j) {
+        int temp = dq[i];
+        dq[i] = dq[j];
+        dq[j] = temp;
+        i++;
+        j--;
+    }
+}
+
+// sort (ascending)
+void sort() {
+    for (int i = front; i <= rear; i++) {
+        for (int j = i + 1; j <= rear; j++) {
+            if (dq[i] > dq[j]) {
+                int temp = dq[i];
+                dq[i] = dq[j];
+                dq[j] = temp;
+            }
+        }
+    }
+}
+
+// display final deque
+void display() {
+    if (empty()) {
+        printf("-1\n");
+        return;
+    }
+
+    for (int i = front; i <= rear; i++) {
+        printf("%d ", dq[i]);
+    }
+    printf("\n");
+}
+
+int main() {
+    int n, x;
+    char op[20];
+
+    scanf("%d", &n);
+
+    for (int i = 0; i < n; i++) {
+        scanf("%s", op);
+
+        if (strcmp(op, "push_front") == 0) {
+            scanf("%d", &x);
+            push_front(x);
+        }
+        else if (strcmp(op, "push_back") == 0) {
+            scanf("%d", &x);
+            push_back(x);
+        }
+        else if (strcmp(op, "pop_front") == 0) {
+            pop_front();
+        }
+        else if (strcmp(op, "pop_back") == 0) {
+            pop_back();
+        }
+        else if (strcmp(op, "front") == 0) {
+            get_front();
+        }
+        else if (strcmp(op, "back") == 0) {
+            get_back();
+        }
+        else if (strcmp(op, "size") == 0) {
+            printf("%d\n", size());
+        }
+        else if (strcmp(op, "empty") == 0) {
+            printf("%d\n", empty());
+        }
+        else if (strcmp(op, "clear") == 0) {
+            clear();
+        }
+        else if (strcmp(op, "reverse") == 0) {
+            reverse();
+        }
+        else if (strcmp(op, "sort") == 0) {
+            sort();
+        }
+    }
+
+    // final state output
+    display();
+
+    return 0;
+}

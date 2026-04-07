@@ -1,0 +1,70 @@
+#include <stdio.h>
+#include <stdlib.h>
+
+struct Node {
+    int vertex;
+    struct Node* next;
+};
+
+int visited[100];
+int recStack[100]; // Tracks nodes in the current recursion path
+
+int isCyclicUtil(struct Node* adjList[], int v) {
+    if (visited[v] == 0) {
+        // Mark current node as visited and part of recursion stack
+        visited[v] = 1;
+        recStack[v] = 1;
+
+        struct Node* temp = adjList[v];
+        while (temp != NULL) {
+            int adjVertex = temp->vertex;
+            
+            // If neighbor is not visited and recursing leads to a cycle
+            if (!visited[adjVertex] && isCyclicUtil(adjList, adjVertex))
+                return 1;
+            // If neighbor is already in the current recursion stack
+            else if (recStack[adjVertex])
+                return 1;
+            
+            temp = temp->next;
+        }
+    }
+    // Remove the vertex from recursion stack before backtracking
+    recStack[v] = 0;
+    return 0;
+}
+
+int main() {
+    int n, m, u, v;
+    printf("Enter vertices and edges: ");
+    scanf("%d %d", &n, &m);
+
+    struct Node* adjList[n];
+    for (int i = 0; i < n; i++) {
+        adjList[i] = NULL;
+        visited[i] = 0;
+        recStack[i] = 0;
+    }
+
+    printf("Enter edges (u -> v):\n");
+    for (int i = 0; i < m; i++) {
+        scanf("%d %d", &u, &v);
+        struct Node* newNode = malloc(sizeof(struct Node));
+        newNode->vertex = v;
+        newNode->next = adjList[u];
+        adjList[u] = newNode;
+    }
+
+    int result = 0;
+    for (int i = 0; i < n; i++) {
+        if (isCyclicUtil(adjList, i)) {
+            result = 1;
+            break;
+        }
+    }
+
+    if (result) printf("YES\n");
+    else printf("NO\n");
+
+    return 0;
+}

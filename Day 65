@@ -1,0 +1,75 @@
+#include <stdio.h>
+#include <stdlib.h>
+
+struct Node {
+    int vertex;
+    struct Node* next;
+};
+
+int visited[100];
+
+// Recursive DFS to detect cycle
+// u = current vertex, parent = vertex we came from
+int isCyclicUtil(struct Node* adjList[], int u, int parent) {
+    visited[u] = 1;
+
+    struct Node* temp = adjList[u];
+    while (temp != NULL) {
+        int v = temp->vertex;
+
+        // If neighbor is not visited, recurse
+        if (!visited[v]) {
+            if (isCyclicUtil(adjList, v, u))
+                return 1;
+        }
+        // If neighbor is visited and not the parent, cycle found!
+        else if (v != parent) {
+            return 1;
+        }
+        temp = temp->next;
+    }
+    return 0;
+}
+
+int main() {
+    int n, m, u, v;
+    printf("Enter vertices and edges: ");
+    scanf("%d %d", &n, &m);
+
+    struct Node* adjList[n];
+    for (int i = 0; i < n; i++) {
+        adjList[i] = NULL;
+        visited[i] = 0;
+    }
+
+    printf("Enter edges (u v):\n");
+    for (int i = 0; i < m; i++) {
+        scanf("%d %d", &u, &v);
+        // Build undirected graph
+        struct Node* newNode = malloc(sizeof(struct Node));
+        newNode->vertex = v;
+        newNode->next = adjList[u];
+        adjList[u] = newNode;
+
+        newNode = malloc(sizeof(struct Node));
+        newNode->vertex = u;
+        newNode->next = adjList[v];
+        adjList[v] = newNode;
+    }
+
+    int hasCycle = 0;
+    // Check all components (handles disconnected graphs)
+    for (int i = 0; i < n; i++) {
+        if (!visited[i]) {
+            if (isCyclicUtil(adjList, i, -1)) {
+                hasCycle = 1;
+                break;
+            }
+        }
+    }
+
+    if (hasCycle) printf("YES\n");
+    else printf("NO\n");
+
+    return 0;
+}

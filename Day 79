@@ -1,0 +1,119 @@
+#include <stdio.h>
+#include <limits.h>
+
+#define MAX 100
+
+// Structure for heap node
+struct Node {
+    int vertex;
+    int dist;
+};
+
+// Min Heap
+struct Node heap[MAX * MAX];
+int size = 0;
+
+// Swap
+void swap(struct Node *a, struct Node *b) {
+    struct Node temp = *a;
+    *a = *b;
+    *b = temp;
+}
+
+// Heapify up
+void heapifyUp(int i) {
+    while (i > 0 && heap[(i - 1) / 2].dist > heap[i].dist) {
+        swap(&heap[i], &heap[(i - 1) / 2]);
+        i = (i - 1) / 2;
+    }
+}
+
+// Heapify down
+void heapifyDown(int i) {
+    int smallest = i;
+    int left = 2 * i + 1;
+    int right = 2 * i + 2;
+
+    if (left < size && heap[left].dist < heap[smallest].dist)
+        smallest = left;
+
+    if (right < size && heap[right].dist < heap[smallest].dist)
+        smallest = right;
+
+    if (smallest != i) {
+        swap(&heap[i], &heap[smallest]);
+        heapifyDown(smallest);
+    }
+}
+
+// Push
+void push(int v, int d) {
+    heap[size].vertex = v;
+    heap[size].dist = d;
+    heapifyUp(size);
+    size++;
+}
+
+// Pop
+struct Node pop() {
+    struct Node root = heap[0];
+    heap[0] = heap[--size];
+    heapifyDown(0);
+    return root;
+}
+
+int isEmpty() {
+    return size == 0;
+}
+
+int main() {
+    int n, m;
+    scanf("%d %d", &n, &m);
+
+    int graph[MAX][MAX] = {0};
+
+    // Input edges (undirected)
+    for (int i = 0; i < m; i++) {
+        int u, v, w;
+        scanf("%d %d %d", &u, &v, &w);
+        graph[u][v] = w;
+        graph[v][u] = w;
+    }
+
+    int source;
+    scanf("%d", &source);
+
+    int dist[MAX];
+
+    // Initialize distances
+    for (int i = 1; i <= n; i++) {
+        dist[i] = INT_MAX;
+    }
+
+    dist[source] = 0;
+    push(source, 0);
+
+    // Dijkstra
+    while (!isEmpty()) {
+        struct Node node = pop();
+        int u = node.vertex;
+
+        for (int v = 1; v <= n; v++) {
+            if (graph[u][v] != 0) {
+                int weight = graph[u][v];
+
+                if (dist[u] + weight < dist[v]) {
+                    dist[v] = dist[u] + weight;
+                    push(v, dist[v]);
+                }
+            }
+        }
+    }
+
+    // Output
+    for (int i = 1; i <= n; i++) {
+        printf("%d ", dist[i]);
+    }
+
+    return 0;
+}

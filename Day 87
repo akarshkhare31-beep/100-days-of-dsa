@@ -1,0 +1,38 @@
+# Binary Search Iterative
+
+# Input
+n = int(input())
+arr = list(map(int, input().split()))
+
+# Sort the array first
+arr.sort()
+
+# Print sorted array
+print(*arr)
+
+# Binary Search Function
+def binary_search(arr, target):
+    low = 0
+    high = len(arr) - 1
+
+    while low <= high:
+        mid = (low + high) // 2
+
+        if arr[mid] == target:
+            return mid
+        elif arr[mid] < target:
+            low = mid + 1
+        else:
+            high = mid - 1
+
+    return -1
+
+# Example search
+target = int(input("Enter element to search: "))
+
+result = binary_search(arr, target)
+
+if result != -1:
+    print("Element found at index", result)
+else:
+    print("Element not found")

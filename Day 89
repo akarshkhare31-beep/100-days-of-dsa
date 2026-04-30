@@ -1,0 +1,86 @@
+#include <stdio.h>
+
+// Function to find maximum value in array
+int findMax(int arr[], int n) {
+    int max = arr[0];
+
+    for(int i = 1; i < n; i++) {
+        if(arr[i] > max)
+            max = arr[i];
+    }
+
+    return max;
+}
+
+// Function to find sum of array
+int findSum(int arr[], int n) {
+    int sum = 0;
+
+    for(int i = 0; i < n; i++) {
+        sum += arr[i];
+    }
+
+    return sum;
+}
+
+// Function to check if allocation is possible
+int isPossible(int arr[], int n, int m, int maxPages) {
+    int students = 1;
+    int pages = 0;
+
+    for(int i = 0; i < n; i++) {
+
+        // If a single book has more pages than maxPages
+        if(arr[i] > maxPages)
+            return 0;
+
+        if(pages + arr[i] <= maxPages) {
+            pages += arr[i];
+        }
+        else {
+            students++;
+            pages = arr[i];
+
+            if(students > m)
+                return 0;
+        }
+    }
+
+    return 1;
+}
+
+int main() {
+    int n, m;
+
+    // Input number of books and students
+    scanf("%d %d", &n, &m);
+
+    int arr[n];
+
+    // Input pages in books
+    for(int i = 0; i < n; i++) {
+        scanf("%d", &arr[i]);
+    }
+
+    int low = findMax(arr, n);
+    int high = findSum(arr, n);
+    int answer = high;
+
+    // Binary Search
+    while(low <= high) {
+        int mid = (low + high) / 2;
+
+        if(isPossible(arr, n, m, mid)) {
+            answer = mid;
+            high = mid - 1;
+        }
+        else {
+            low = mid + 1;
+        }
+    }
+
+    // Output result
+    printf("%d\n", answer);
+
+    return 0;
+}

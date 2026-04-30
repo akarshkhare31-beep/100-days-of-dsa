@@ -1,38 +1,68 @@
-# Binary Search Iterative
+#include <stdio.h>
 
-# Input
-n = int(input())
-arr = list(map(int, input().split()))
+// Function to sort array using Bubble Sort
+void bubbleSort(int arr[], int n) {
+    int i, j, temp;
 
-# Sort the array first
-arr.sort()
+    for(i = 0; i < n - 1; i++) {
+        for(j = 0; j < n - i - 1; j++) {
+            if(arr[j] > arr[j + 1]) {
+                temp = arr[j];
+                arr[j] = arr[j + 1];
+                arr[j + 1] = temp;
+            }
+        }
+    }
+}
 
-# Print sorted array
-print(*arr)
+// Iterative Binary Search Function
+int binarySearch(int arr[], int n, int target) {
+    int low = 0, high = n - 1;
 
-# Binary Search Function
-def binary_search(arr, target):
-    low = 0
-    high = len(arr) - 1
+    while(low <= high) {
+        int mid = (low + high) / 2;
 
-    while low <= high:
-        mid = (low + high) // 2
+        if(arr[mid] == target)
+            return mid;
+        else if(arr[mid] < target)
+            low = mid + 1;
+        else
+            high = mid - 1;
+    }
 
-        if arr[mid] == target:
-            return mid
-        elif arr[mid] < target:
-            low = mid + 1
-        else:
-            high = mid - 1
+    return -1;
+}
 
-    return -1
+int main() {
+    int n, i, target;
 
-# Example search
-target = int(input("Enter element to search: "))
+    printf("Enter number of elements: ");
+    scanf("%d", &n);
 
-result = binary_search(arr, target)
+    int arr[n];
 
-if result != -1:
-    print("Element found at index", result)
-else:
-    print("Element not found")
+    printf("Enter array elements: ");
+    for(i = 0; i < n; i++) {
+        scanf("%d", &arr[i]);
+    }
+
+    // Sort array
+    bubbleSort(arr, n);
+
+    printf("Sorted Array:\n");
+    for(i = 0; i < n; i++) {
+        printf("%d ", arr[i]);
+    }
+
+    printf("\nEnter element to search: ");
+    scanf("%d", &target);
+
+    int result = binarySearch(arr, n, target);
+
+    if(result != -1)
+        printf("Element found at index %d\n", result);
+    else
+        printf("Element not found\n");
+
+    return 0;
+}
